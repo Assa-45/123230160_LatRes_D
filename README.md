@@ -49,3 +49,7 @@ lib/
 | `google_fonts` | Custom font (DM Sans) |
 | `shimmer` | Loading skeleton effect |
 | `cached_network_image` | Load & cache gambar produk |
+
+## Notes
+
+Alasan milih Sembast : Windowsnya lagi corrupt jadi file flutter gamau jalan. Karena flutternya gamau jalan jadinya gabisa buat ngerun proyek flutter di lokal ataupun Android Studio. Makanya ini beralih ke Github Codespaces. Sdgkan pilihan device Codespaces yg available dan cepat cuma pake web server. Dan library Hive maupun SQLite gabisa dipakai di web server. Jadi saya milih Sembast karena bisa dipakai di lingkungan  web, android, iOS, maupun desktop. Terimakasih :)

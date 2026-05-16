@@ -12,10 +12,12 @@ Aplikasi ini dirancang untuk berjalan di berbagai platform termasuk Android, iOS
 lib/
 ├── main.dart                  # Entry point, inisialisasi Provider & cek auto login
 │
-├── models/
+├── models/                    # Berisi class model sebagai representasi data - 
+│   │                          # - dari API maupun local database
 │   └── product_model.dart     # Model produk & cart item (parsing JSON dari API)
 │
-├── pages/
+├── pages/                     # Berisi seluruh halaman/tampilan UI aplikasi, -
+│   │                          # - masing-masing file = satu page
 │   ├── login_page.dart        # Halaman login (username bebas, password = NIM)
 │   ├── main_page.dart         # Wrapper bottom navigation bar (Home & Profile)
 │   ├── home_page.dart         # Halaman utama, list produk dari API + search + filter
@@ -23,10 +25,12 @@ lib/
 │   ├── cart_page.dart         # Halaman keranjang belanja per user
 │   └── profile_page.dart      # Halaman profil, info user, dan tombol logout
 │
-├── providers/
-│   └── app_state.dart         # State management global (Provider), handle login & cart
+├── providers/                 # Berisi state management global menggunakan Provider, -
+│   │                          # - data di sini bisa diakses dari halaman mana saja
+│   └── app_state.dart         # Handle state login, session, dan data cart
 │
-└── services/
+└── services/                  # Berisi logic yang berhubungan dengan data, -
+    │                          # - dipisah dari UI agar kode lebih rapi (separation of concerns)
     ├── api_service.dart        # Semua logic HTTP request ke DummyJSON API
     ├── db_service.dart         # Local database menggunakan Sembast
     └── session_service.dart    # Simpan & ambil session login via SharedPreferences

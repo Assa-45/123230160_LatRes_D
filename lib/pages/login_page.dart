@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       const SizedBox(height: 8),
                       _buildTextField(
                         controller: _passwordController,
-                        hint: 'Masukkan NIM Anda',
+                        hint: 'Masukkan password Anda',
                         icon: Icons.lock_outline_rounded,
                         isPassword: true,
                         validator: (val) {

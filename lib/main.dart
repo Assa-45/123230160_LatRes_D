@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lat_responsi/pages/main_page.dart';
 import 'package:provider/provider.dart';
-
 import 'pages/login_page.dart';
-import 'controllers/app_state.dart';
+import 'providers/app_state.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inisialisasi AppState n cek session yg tersimpan
+  final appState = AppState();
+  await appState.tryAutoLogin();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AppState(),
+    ChangeNotifierProvider.value(
+      value: appState,
       child: const MyApp(),
     ),
   );
@@ -18,10 +24,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = context.watch<AppState>().isLoggedIn;
+    
     return MaterialApp(
       title: 'Latihan Responsi Mobile',
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: isLoggedIn ? const MainPage() : const LoginPage(),
     );
   }
 }

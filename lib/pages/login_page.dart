@@ -1,9 +1,7 @@
-// lib/screens/login_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../controllers/app_state.dart';
+import '../providers/app_state.dart';
 import 'main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -26,7 +24,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  static const String _nimPassword = '22552011048';
+  static const String _nimPassword = '123230160';
 
   @override
   void initState() {
@@ -128,7 +126,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              'SHOPKU',
+                              'CHRISSAN',
                               style: GoogleFonts.spaceMono(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w700,
@@ -188,11 +186,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       const SizedBox(height: 24),
 
                       // Password Field
-                      _buildLabel('Password (NIM)'),
+                      _buildLabel('Password'),
                       const SizedBox(height: 8),
                       _buildTextField(
                         controller: _passwordController,
-                        hint: 'Masukkan NIM kamu',
+                        hint: 'Masukkan NIM Anda',
                         icon: Icons.lock_outline_rounded,
                         isPassword: true,
                         validator: (val) {
@@ -293,7 +291,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
                       Center(
                         child: Text(
-                          '© 2024 Shopku. All rights reserved.',
+                          '© 2026 Chrissan. All rights reserved.',
                           style: GoogleFonts.dmSans(
                             fontSize: 12,
                             color: Colors.white24,

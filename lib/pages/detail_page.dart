@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../models/product_model.dart';
-import '../controllers/app_state.dart';
+import '../providers/app_state.dart';
+import 'cart_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -71,7 +72,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       backgroundColor: const Color(0xFF0D0D0D),
       body: CustomScrollView(
         slivers: [
-          // App Bar with image
           SliverAppBar(
             expandedHeight: 340,
             pinned: true,
@@ -94,7 +94,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   clipBehavior: Clip.none,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/cart'),
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
                       child: Container(
                         margin: const EdgeInsets.all(8),
                         padding: const EdgeInsets.all(8),

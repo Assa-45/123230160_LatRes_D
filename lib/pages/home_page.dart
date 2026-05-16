@@ -1,11 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../models/product_model.dart';
-import '../controllers/app_state.dart';
+import '../providers/app_state.dart';
+import '../services/api_service.dart';
+import 'cart_page.dart';
 import 'detail_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,24 +42,14 @@ class _HomePageState extends State<HomePage> {
       _error = null;
     });
     try {
-      final response = await http.get(
-        Uri.parse('https://dummyjson.com/products?limit=100'),
-      );
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final products = (data['products'] as List)
-            .map((p) => Product.fromJson(p))
-            .toList();
-        final cats = products.map((p) => p.category).toSet().toList();
-        cats.sort();
-        setState(() {
-          _products = products;
-          _categories = ['All', ...cats];
-          _isLoading = false;
-        });
-      } else {
-        throw Exception('Gagal memuat produk');
-      }
+      final products = await ApiService().fetchProducts();
+      final cats = products.map((p) => p.category).toSet().toList();
+      cats.sort();
+      setState(() {
+        _products = products;
+        _categories = ['All', ...cats];
+        _isLoading = false;
+      });
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -123,9 +113,9 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Halo, 👋',
+                  'Halo,',
                   style: GoogleFonts.dmSans(
-                    fontSize: 13,
+                    fontSize: 14,
                     color: Colors.white38,
                   ),
                 ),
@@ -147,7 +137,10 @@ class _HomePageState extends State<HomePage> {
             clipBehavior: Clip.none,
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CartPage()),
+                ),
                 child: Container(
                   width: 46,
                   height: 46,
@@ -429,60 +422,80 @@ class _ProductCard extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      product.brand,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 10,
-                        color: const Color(0xFF6C63FF),
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      product.title,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Spacer(),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.star_rounded, color: Color(0xFFFFC107), size: 13),
-                        const SizedBox(width: 3),
                         Text(
-                          product.rating.toStringAsFixed(1),
+                          product.brand,
+                          maxLines: 1, 
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.dmSans(
-                            fontSize: 11,
-                            color: Colors.white54,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 10,
+                            color: const Color(0xFF6C63FF),
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          product.title,
+                          maxLines: 1, // Ubah ke 1 jika ukuran grid card kamu sangat pendek
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.dmSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '\$${product.discountedPrice.toStringAsFixed(2)}',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                    if (product.discountPercentage > 0)
-                      Text(
-                        '\$${product.price.toStringAsFixed(2)}',
-                        style: GoogleFonts.dmSans(
-                          fontSize: 11,
-                          color: Colors.white30,
-                          decoration: TextDecoration.lineThrough,
+                    
+                    // Rating & Price
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.star_rounded, color: Color(0xFFFFC107), size: 13),
+                            const SizedBox(width: 3),
+                            Text(
+                              product.rating.toStringAsFixed(1),
+                              style: GoogleFonts.dmSans(
+                                fontSize: 11,
+                                color: Colors.white54,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                        const SizedBox(height: 4),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 6,
+                          children: [
+                            Text(
+                              '\$${product.discountedPrice.toStringAsFixed(2)}',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                            if (product.discountPercentage > 0)
+                              Text(
+                                '\$${product.price.toStringAsFixed(2)}',
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 10,
+                                  color: Colors.white30,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
